@@ -3,11 +3,19 @@ CEFR Grammar Checker - Python Scoring Microservice
 Advanced 5-category rubric scoring with linguistic analysis
 """
 
+import sys
+import os
+
+# Check Python version first
+print(f"=== Starting CEFR API ===")
+print(f"Python version: {sys.version}")
+print(f"Python executable: {sys.executable}")
+
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
-import spacy
+# import spacy  # Disabled for free hosting
 import re
 import json
 import hashlib
@@ -1611,6 +1619,17 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    import time
     
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Get port from environment variable (Render uses $PORT)
+    port = int(os.environ.get("PORT", 8000))
+    
+    print(f"=== Starting server on port {port} ===")
+    print(f"Python version: {sys.version}")
+    
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=port,
+        workers=1,
+        log_level="info"
+    )

@@ -4,5 +4,20 @@ services:
     env: python
     plan: free
     region: oregon
-    buildCommand: python --version && pip install --upgrade pip==23.3.2 setuptools==69.0.2 wheel==0.42.0 && pip install -r requirements.txt --only-binary=all
-    startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1
+    buildCommand: |
+      echo "=== Checking Python Version ==="
+      python --version
+      echo "=== Installing dependencies ==="
+      pip install --upgrade pip==23.3.2
+      pip install --no-cache-dir --only-binary=all -r requirements.txt
+      echo "=== Build Complete ==="
+    startCommand: |
+      echo "Starting with Python version:"
+      python --version
+      python -c "import sys; print(f'Python executable: {sys.executable}')"
+      python main.py
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHON_VERSION
+        value: "3.11.7"
