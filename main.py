@@ -15,7 +15,7 @@ from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
-# import spacy  # Disabled for free hosting
+import spacy  # Disabled for free hosting
 import re
 import json
 import hashlib
@@ -24,7 +24,7 @@ import time
 from collections import Counter
 import math
 import nltk
-# from cefrpy import CEFRAnalyzer  # Commented out - not available on free hosting
+from cefrpy import CEFRAnalyzer  # Commented out - not available on free hosting
 from nltk.corpus import wordnet as wn
 
 app = FastAPI(title="CEFR Scoring Service", version="1.0.0")
