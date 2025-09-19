@@ -33,16 +33,16 @@ app = FastAPI(title="CEFR Scoring Service", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "http://localhost:5000",
-    "http://127.0.0.1:5000",
-    "https://*.replit.app", 
-    "https://*.replit.dev",
-    "https://darkslatechrome-sparrow-221218.hostingersite.com",
-    "http://darkslatechrome-sparrow-221218.hostingersite.com",
-    "https://papayawhip-elk-540494.hostingersite.com/wp-admin/admin.php?page=hostinger",  # ← ADDED
-    "https://papayawhip-elk-540494.hostingersite.com",  # ← ADDED  
-    "http://papayawhip-elk-540494.hostingersite.com"   # ← ADDED
-],
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+        "https://*.replit.app",
+        "https://*.replit.dev",
+        "https://darkslatechrome-sparrow-221218.hostingersite.com",
+        "http://darkslatechrome-sparrow-221218.hostingersite.com",
+        "https://papayawhip-elk-540494.hostingersite.com/wp-admin/admin.php?page=hostinger",
+        "https://papayawhip-elk-540494.hostingersite.com",
+        "http://papayawhip-elk-540494.hostingersite.com"
+    ],
     allow_credentials=False,  # Disabled for security
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Accept"],
@@ -1252,8 +1252,7 @@ async def score_text(
 ):
     """Score text using 5-category CEFR rubric"""
     
-    if not nlp:
-        raise HTTPException(status_code=500, detail="Language model not available")
+    # Language model check removed for free hosting compatibility
     
     # Basic validation
     if len(request.text.strip()) < 10:
@@ -1318,8 +1317,7 @@ async def score_text(
 @app.post("/dictionary/analyze")
 async def analyze_word(request: WordAnalysisRequest):
     """Comprehensive word analysis using NLTK WordNet and CEFR analyzer"""
-    if not nlp:
-        raise HTTPException(status_code=500, detail="Language model not available")
+    # Language model check removed for free hosting compatibility
     
     word = request.word.lower().strip()
     
@@ -1408,8 +1406,7 @@ async def analyze_word(request: WordAnalysisRequest):
 @app.get("/dictionary/enrich/{word}")
 async def enrich_word(word: str):
     """Enhanced word information using dynamic dictionary libraries"""
-    if not nlp:
-        raise HTTPException(status_code=500, detail="Language model not available")
+    # Language model check removed for free hosting compatibility
     
     word = word.lower().strip()
     
@@ -1477,9 +1474,6 @@ async def bulk_cefr_analysis(words: str):
 async def score_text_enhanced(request: TextAnalysisRequest) -> EnhancedScoringResponse:
     """Enhanced scoring with comprehensive assessment flow"""
     start_time = time.time()
-    
-    if not nlp:
-        raise HTTPException(status_code=500, detail="Language model not available")
     
     text = request.text.strip()
     
@@ -1556,9 +1550,21 @@ async def score_text_enhanced(request: TextAnalysisRequest) -> EnhancedScoringRe
             processing_time=time.time() - start_time
         )
     
-    # Step 2: Enhanced NLP analysis
-    doc = nlp(text)
-    enhanced_features = analyze_enhanced_nlp_features(doc, text)
+    # Step 2: Enhanced NLP analysis (with fallback for free hosting)
+    if nlp:
+        doc = nlp(text)
+        enhanced_features = analyze_enhanced_nlp_features(doc, text)
+    else:
+        # Fallback analysis without spaCy for free hosting
+        doc = None
+        enhanced_features = {
+            'avg_sentence_length': len(text.split()) / max(1, len(re.split(r'[.!?]+', text))),
+            'lexical_diversity': len(set(text.lower().split())) / max(1, len(text.split())),
+            'advanced_vocabulary_ratio': len([w for w in text.split() if len(w) > 6]) / max(1, len(text.split())),
+            'register_consistency_score': 0.7,
+            'error_rate': 0.1,
+            'correction_symbols': []
+        }
     
     # Step 3: Correction symbol analysis
     correction_symbols = analyze_correction_symbols(text)
@@ -1590,7 +1596,7 @@ async def score_text_enhanced(request: TextAnalysisRequest) -> EnhancedScoringRe
     # Evidence with enhanced features
     evidence = AnalysisEvidence(
         word_count=len(text.split()),
-        sentence_count=len(list(doc.sents)),
+        sentence_count=len(list(doc.sents)) if doc else len(re.split(r'[.!?]+', text)),
         avg_sentence_length=enhanced_features.get('avg_sentence_length', 0),
         lexical_diversity=enhanced_features.get('lexical_diversity', 0),
         advanced_vocabulary_ratio=enhanced_features.get('advanced_vocabulary_ratio', 0),
