@@ -33,11 +33,16 @@ app = FastAPI(title="CEFR Scoring Service", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5000",
-        "http://127.0.0.1:5000",
-        "https://*.replit.app",
-        "https://*.replit.dev"
-    ],
+    "http://localhost:5000",
+    "http://127.0.0.1:5000",
+    "https://*.replit.app", 
+    "https://*.replit.dev",
+    "https://darkslatechrome-sparrow-221218.hostingersite.com",
+    "http://darkslatechrome-sparrow-221218.hostingersite.com",
+    "https://papayawhip-elk-540494.hostingersite.com/wp-admin/admin.php?page=hostinger",  # ← ADDED
+    "https://papayawhip-elk-540494.hostingersite.com",  # ← ADDED  
+    "http://papayawhip-elk-540494.hostingersite.com"   # ← ADDED
+],
     allow_credentials=False,  # Disabled for security
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Accept"],
