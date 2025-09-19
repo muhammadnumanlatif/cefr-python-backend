@@ -3,8 +3,8 @@ services:
     name: cefr-python-scorer
     env: python
     plan: free
-    buildCommand: pip install --upgrade pip && pip install --only-binary=all --no-compile -r requirements.txt
+    buildCommand: pip install --upgrade pip setuptools wheel && pip install --only-binary=all --no-build-isolation -r requirements.txt
     startCommand: gunicorn main:app -w 1 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.11.7
