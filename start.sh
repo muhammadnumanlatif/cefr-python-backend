@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Check Python version
+python --version
+
 # Download required NLTK data
 python -c "
 import nltk
@@ -11,5 +14,5 @@ except Exception as e:
     print(f'NLTK download error: {e}')
 "
 
-# Start the FastAPI application with gunicorn
-exec gunicorn main:app -w 1 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:${PORT:-8000}
+# Start the FastAPI application
+exec python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1
