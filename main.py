@@ -35,12 +35,8 @@ app.add_middleware(
     allow_headers=["Content-Type", "Accept"],
 )
 
-# Initialize language models and tools
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    print("SpaCy model not found. Install with: python -m spacy download en_core_web_sm")
-    nlp = None
+# Initialize language models and tools  
+nlp = None  # Disabled for free hosting compatibility
 
 # Initialize NLTK and download required data
 try:
