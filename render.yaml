@@ -21,3 +21,5 @@ services:
         value: "1"
       - key: PYTHON_VERSION
         value: "3.11.7"
+      - key: NIXPACKS_PYTHON_VERSION
+        value: "3.11.7"
